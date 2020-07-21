@@ -1,7 +1,7 @@
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.List;
+import java.util.Collection;
 import model.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,20 +30,20 @@ public interface OrderApi {
           + "validation, update not possible."),
       @ApiResponse(code = 404, message = "Order with passed id does not exist in database, update not possible")})
   @PutMapping(value = "/{id}")
-  ResponseEntity<?> updateOrder(@PathVariable int id, Order order);
+  ResponseEntity<?> updateOrder(@PathVariable long id, Order order);
 
   @ApiOperation(value = "Delete an existing order", notes = "Delete an order with given id from database", response = Void.class)
   @ApiResponses({
       @ApiResponse(code = 200, message = "OK"),
       @ApiResponse(code = 404, message = "Order with passed id does not exist in database, deletion not possible")})
   @DeleteMapping(value = "/{id}")
-  ResponseEntity<?> deleteOrder(@PathVariable int id);
+  ResponseEntity<?> deleteOrder(@PathVariable long id);
 
-  @ApiOperation(value = "Get list of all orders", notes = "Get all orders from database", response = Order.class, responseContainer = "List")
+  @ApiOperation(value = "Get collection of all orders", notes = "Get all orders from database", response = Order.class, responseContainer = "List")
   @ApiResponses({
       @ApiResponse(code = 200, message = "OK")})
   @GetMapping
-  ResponseEntity<List<Order>> getOrders();
+  ResponseEntity<Collection<Order>> getAllOrders();
 
   @ApiOperation(value = "Get a single order", notes = "Get an order by id", response = Order.class)
   @ApiResponses({
