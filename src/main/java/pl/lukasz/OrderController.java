@@ -1,14 +1,16 @@
+package pl.lukasz;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import validators.OrderValidator;
+import pl.lukasz.model.Order;
+import pl.lukasz.validators.OrderValidator;
 
 @RestController
 @AllArgsConstructor

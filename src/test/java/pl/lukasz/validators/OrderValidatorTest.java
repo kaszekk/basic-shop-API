@@ -1,14 +1,14 @@
-package validators;
+package pl.lukasz.validators;
 
 import static org.junit.Assert.assertEquals;
-import static validators.OrderValidator.CUSTOMER_NAME_EMPTY;
-import static validators.OrderValidator.CUSTOMER_SURNAME_EMPTY;
-import static validators.OrderValidator.ORDER_DESCRIPTION_EMPTY;
+import static pl.lukasz.validators.OrderValidator.BUYER_NAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.BUYER_SURNAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.ORDER_DESCRIPTION_EMPTY;
 
 import java.time.LocalDate;
 import java.util.List;
-import model.Customer;
-import model.Order;
+import pl.lukasz.model.Buyer;
+import pl.lukasz.model.Order;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,16 +24,16 @@ public class OrderValidatorTest {
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithEmptyNameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithEmptyNameBuyer() {
     // given
-    Customer emptyNameCustomer = Customer.builder()
+    Buyer emptyNameBuyer = Buyer.builder()
         .name(EMPTY)
         .surname("Smith")
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(emptyNameCustomer)
+        .buyer(emptyNameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -42,20 +42,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_NAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithWhiteCharactersNameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithWhiteCharactersNameBuyer() {
     // given
-    Customer whiteCharactersNameCustomer = Customer.builder()
+    Buyer whiteCharactersNameBuyer = Buyer.builder()
         .name(ONLY_WHITE_CHARACTERS)
         .surname("Smith")
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(whiteCharactersNameCustomer)
+        .buyer(whiteCharactersNameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -64,20 +64,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_NAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithNullNameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithNullNameBuyer() {
     // given
-    Customer nullNameCustomer = Customer.builder()
+    Buyer nullNameBuyer = Buyer.builder()
         .name(null)
         .surname("Smith")
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(nullNameCustomer)
+        .buyer(nullNameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -86,20 +86,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_NAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithEmptySurnameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithEmptySurnameBuyer() {
     // given
-    Customer emptySurnameCustomer = Customer.builder()
+    Buyer emptySurnameBuyer = Buyer.builder()
         .name("Adam")
         .surname(EMPTY)
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(emptySurnameCustomer)
+        .buyer(emptySurnameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -108,20 +108,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_SURNAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithWhiteCharactersSurnameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithWhiteCharactersSurnameBuyer() {
     // given
-    Customer whiteCharactersSurnameCustomer = Customer.builder()
+    Buyer whiteCharactersSurnameBuyer = Buyer.builder()
         .name("Adam")
         .surname(ONLY_WHITE_CHARACTERS)
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(whiteCharactersSurnameCustomer)
+        .buyer(whiteCharactersSurnameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -130,20 +130,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_SURNAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithNullSurnameCustomer() {
+  public void shouldReturnValidationErrorForOrderWithNullSurnameBuyer() {
     // given
-    Customer nullSurnameCustomer = Customer.builder()
+    Buyer nullSurnameBuyer = Buyer.builder()
         .name("Adam")
         .surname(null)
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(nullSurnameCustomer)
+        .buyer(nullSurnameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -152,20 +152,20 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_SURNAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
   }
 
   @Test
   public void shouldReturnValidationErrorForOrderWithEmptyDescription() {
     // given
-    Customer customer = Customer.builder()
+    Buyer buyer = Buyer.builder()
         .name("Adam")
         .surname("Smith")
         .build();
 
     Order emptyDescriptionOrder = Order.builder()
         .description(EMPTY)
-        .customer(customer)
+        .buyer(buyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -180,14 +180,14 @@ public class OrderValidatorTest {
   @Test
   public void shouldReturnValidationErrorForOrderWithWhiteCharactersDescription() {
     // given
-    Customer customer = Customer.builder()
+    Buyer buyer = Buyer.builder()
         .name("Adam")
         .surname("Smith")
         .build();
 
     Order whiteCharactersDescriptionOrder = Order.builder()
         .description(ONLY_WHITE_CHARACTERS)
-        .customer(customer)
+        .buyer(buyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -202,14 +202,14 @@ public class OrderValidatorTest {
   @Test
   public void shouldReturnValidationErrorForOrderWithNullDescription() {
     // given
-    Customer customer = Customer.builder()
+    Buyer buyer = Buyer.builder()
         .name("Adam")
         .surname("Smith")
         .build();
 
     Order nullDescriptionOrder = Order.builder()
         .description(null)
-        .customer(customer)
+        .buyer(buyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -224,14 +224,14 @@ public class OrderValidatorTest {
   @Test
   public void shouldReturnValidationErrorForNullDateOrder() {
     // given
-    Customer nullSurnameCustomer = Customer.builder()
+    Buyer nullSurnameBuyer = Buyer.builder()
         .name("Adam")
         .surname(null)
         .build();
 
     Order order = Order.builder()
         .description("Pizza")
-        .customer(nullSurnameCustomer)
+        .buyer(nullSurnameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -240,7 +240,7 @@ public class OrderValidatorTest {
 
     // then
     assertEquals(1, validationResult.size());
-    assertEquals(CUSTOMER_SURNAME_EMPTY, validationResult.get(0));
+    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
   }
 
 }

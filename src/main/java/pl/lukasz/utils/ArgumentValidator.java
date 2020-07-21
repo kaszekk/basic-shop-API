@@ -1,4 +1,4 @@
-package utils;
+package pl.lukasz.utils;
 
 public class ArgumentValidator {
 

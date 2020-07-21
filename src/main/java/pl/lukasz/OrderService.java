@@ -1,8 +1,10 @@
+package pl.lukasz;
+
 import java.util.Collection;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import model.Order;
 import org.springframework.stereotype.Service;
+import pl.lukasz.model.Order;
 
 @AllArgsConstructor
 @Service
@@ -21,7 +23,7 @@ public class OrderService {
   public void updateOrder(long id, Order updatedOrder) {
     Order orderToUpdate = getOrderFromDatabase(id);
     orderToUpdate.setDescription(updatedOrder.getDescription());
-    orderToUpdate.setCustomer(updatedOrder.getCustomer());
+    orderToUpdate.setBuyer(updatedOrder.getBuyer());
     orderToUpdate.setDate(updatedOrder.getDate());
     orderRepository.save(orderToUpdate);
   }
@@ -39,6 +41,6 @@ public class OrderService {
   }
 
   public Collection<Order> getAllOrders() {
-    return orderRepository.getAllOrders() ;
+    return orderRepository.findAll() ;
   }
 }

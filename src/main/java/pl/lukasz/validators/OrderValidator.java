@@ -1,23 +1,23 @@
-package validators;
+package pl.lukasz.validators;
 
 import java.util.ArrayList;
 import java.util.List;
-import model.Customer;
-import model.Order;
+import pl.lukasz.model.Buyer;
+import pl.lukasz.model.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderValidator {
 
   public static final String ORDER_DESCRIPTION_EMPTY = "Order description is empty or contains only white characters";
-  public static final String CUSTOMER_NAME_EMPTY = "Customer name is empty or contains only white characters";
-  public static final String CUSTOMER_SURNAME_EMPTY = "Customer surname is empty or contains only white characters";
+  public static final String BUYER_NAME_EMPTY = "Buyer name is empty or contains only white characters";
+  public static final String BUYER_SURNAME_EMPTY = "Buyer surname is empty or contains only white characters";
   public static final String EMPTY_ORDER_DATE = "Order date is empty";
 
   public List<String> validate(Order order) {
     List<String> validationResults = new ArrayList<>();
     validateOrderDescription(order, validationResults);
-    validateCustomer(order.getCustomer(), validationResults);
+    validateBuyer(order.getBuyer(), validationResults);
     validateOrderDate(order, validationResults);
 
     return validationResults;
@@ -29,12 +29,12 @@ public class OrderValidator {
     }
   }
 
-  private void validateCustomer(Customer customer, List<String> validationResults) {
-    if (isNullOrEmpty(customer.getName())) {
-      validationResults.add(CUSTOMER_NAME_EMPTY);
+  private void validateBuyer(Buyer buyer, List<String> validationResults) {
+    if (isNullOrEmpty(buyer.getName())) {
+      validationResults.add(BUYER_NAME_EMPTY);
     }
-    if (isNullOrEmpty(customer.getSurname())) {
-      validationResults.add(CUSTOMER_SURNAME_EMPTY);
+    if (isNullOrEmpty(buyer.getSurname())) {
+      validationResults.add(BUYER_SURNAME_EMPTY);
     }
   }
 
