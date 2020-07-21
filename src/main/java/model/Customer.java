@@ -1,3 +1,5 @@
+package model;
+
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

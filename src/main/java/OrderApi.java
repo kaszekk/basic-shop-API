@@ -1,4 +1,3 @@
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("order")
-@Api(value = "/order", description = "Available operations for Simple-shop-API application", tags = {"Order"})
+@ApiOperation(value = "/order", notes = "Available operations for Simple-shop-API application", tags = {"Order"})
 public interface OrderApi {
 
   @ApiOperation(value = "Create a new order", notes = "Add an order to database", response = Long.class)
