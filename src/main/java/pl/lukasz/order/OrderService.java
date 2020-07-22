@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.lukasz.model.Buyer;
 import pl.lukasz.model.Order;
 
 @AllArgsConstructor
@@ -41,6 +42,6 @@ public class OrderService {
   }
 
   public Collection<Order> getAllOrders() {
-    return orderRepository.findAll() ;
+    return orderRepository.findAll();
   }
 }

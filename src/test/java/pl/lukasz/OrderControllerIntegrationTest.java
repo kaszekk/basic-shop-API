@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.lukasz.model.Buyer;
 import pl.lukasz.model.Order;
 
 @ExtendWith(SpringExtension.class)
@@ -21,8 +22,9 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
   @Test
   public void shouldReturnIdWhenEmployeeAddedSuccessfully() throws Exception {
     //Given
+    Buyer buyer = new Buyer("Franek","Kimono");
     LocalDate orderDate = LocalDate.of(2020, 7, 20);
-    Order orderRequest = new Order("Pizza", "Franek", "Kimono", orderDate);
+    Order orderRequest = new Order("Pizza", buyer, orderDate);
     long expectedId = 1;
 
     //When
@@ -37,9 +39,11 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
   @Test
   public void shouldAddOrder() throws Exception {
     //Given
+
+    Buyer buyer = new Buyer("Franek","Kimono");
     LocalDate orderDate = LocalDate.of(2020, 6, 20);
 
-    Order expectedOrder = new Order("John", "Doe", "Frisk", orderDate);
+    Order expectedOrder = new Order("John", buyer, orderDate);
     expectedOrder.setId(1L);
 
     //When

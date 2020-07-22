@@ -32,8 +32,6 @@ public class Order {
   @NonNull
   private String description;
 
-//  @ManyToOne(cascade = CascadeType.ALL)
-//  @ManyToOne
   @NonNull
   @Embedded
   private Buyer buyer;
