@@ -17,6 +17,7 @@ import lombok.NonNull;
 @Data
 @Builder
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
@@ -28,6 +29,7 @@ public class Order {
   private Long id;
 
   @ApiModelProperty(value = "Short order description.", example = "Pizza", dataType = "String")
+  @NonNull
   private String description;
 
 //  @ManyToOne(cascade = CascadeType.ALL)
@@ -37,12 +39,7 @@ public class Order {
   private Buyer buyer;
 
   @ApiModelProperty(value = "Order date.", example = "2020-07-21", dataType = "LocalDate")
+  @NonNull
   private LocalDate date;
 
-  public Order(String description, String buyerName, String buyerSurname, LocalDate date) {
-    this.description = description;
-    this.buyerName = buyerName;
-    this.buyerSurname = buyerSurname;
-    this.date = date;
-  }
 }
