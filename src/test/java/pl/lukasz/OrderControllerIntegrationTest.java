@@ -44,8 +44,7 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     Buyer buyer = new Buyer("Franek", "Kimono");
     LocalDate orderDate = LocalDate.of(2020, 6, 20);
 
-    Order expectedOrder = new Order("John", buyer, orderDate);
-    expectedOrder.setId(1L);
+    Order expectedOrder = new Order("Bread", buyer, orderDate);
 
     // when
     final long addedOrderId = callRestToAddOrderAndReturnId(expectedOrder);
@@ -54,7 +53,37 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
 
     // then
     assertThat(numberOfAllOrdersInDb, is(equalTo(1)));
-    assertThat(addedOrder, is(equalTo(expectedOrder)));
+    assertThat(addedOrder, is(equalTo(expectedOrder.withId(addedOrderId))));
+  }
+
+  @Test
+  public void shouldUpdateOrder() throws Exception {
+    // given
+    Buyer buyer = new Buyer("Franek", "Kimono");
+    LocalDate orderDate = LocalDate.of(2020, 6, 20);
+
+    Order orderToAdd = new Order("Bread", buyer, orderDate);
+
+    final long originalOrderId = callRestToAddOrderAndReturnId(orderToAdd);
+    Order addedOrder = callRestToGetOrderById(originalOrderId);
+    int numberOfAllOrdersInDb = callRestToGetAllOrders().size();
+
+    assertThat(numberOfAllOrdersInDb, is(equalTo(1)));
+    assertThat(addedOrder, is(equalTo(addedOrder)));
+
+    Buyer updatedBuyer = new Buyer("Alan", "Pogoda");
+    LocalDate updatedOrderDate = LocalDate.of(2019, 2, 23);
+
+    Order updatedOrder = new Order("Sushi", updatedBuyer, updatedOrderDate);
+    // when
+    final int status = callRestToUpdateOrderAndReturnStatus(originalOrderId, updatedOrder);
+    assertThat(status, is(equalTo(HttpStatus.OK.value())));
+
+    Order updatedOrderFromDb = callRestToGetOrderById(originalOrderId);
+
+    // then
+    assertThat(updatedOrderFromDb.getId(), is(equalTo(originalOrderId)));
+    assertThat(updatedOrderFromDb, is(equalTo(updatedOrder.withId(originalOrderId))));
   }
 
   @Test
@@ -80,23 +109,16 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     final long bazookaOrderId = callRestToAddOrderAndReturnId(bazookaOrder);
     final long chipsOrderId = callRestToAddOrderAndReturnId(chipsOrder);
 
-    assignIdsToOrderInstances(
-        pizzaOrder, pizzaOrderId,
-        spriteOrder, spriteOrderId,
-        bazookaOrder, bazookaOrderId,
-        chipsOrder, chipsOrderId
-    );
-
     // when
     final List<Order> allOrdersFromDb = callRestToGetAllOrders();
 
     // then
     assertThat(allOrdersFromDb.size(), is(equalTo(4)));
 
-    assertThat(allOrdersFromDb.get(0), is(equalTo(pizzaOrder)));
-    assertThat(allOrdersFromDb.get(1), is(equalTo(spriteOrder)));
-    assertThat(allOrdersFromDb.get(2), is(equalTo(bazookaOrder)));
-    assertThat(allOrdersFromDb.get(3), is(equalTo(chipsOrder)));
+    assertThat(allOrdersFromDb.get(0), is(equalTo(pizzaOrder.withId(pizzaOrderId))));
+    assertThat(allOrdersFromDb.get(1), is(equalTo(spriteOrder.withId(spriteOrderId))));
+    assertThat(allOrdersFromDb.get(2), is(equalTo(bazookaOrder.withId(bazookaOrderId))));
+    assertThat(allOrdersFromDb.get(3), is(equalTo(chipsOrder.withId(chipsOrderId))));
   }
 
   @Test
@@ -110,10 +132,9 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
 
     Order addedOrder = callRestToGetOrderById(expectedOrderId);
     int numberOfAllOrdersInDbBeforeDeletion = callRestToGetAllOrders().size();
-    expectedOrder.setId(1L);
 
     assertThat(numberOfAllOrdersInDbBeforeDeletion, is(equalTo(1)));
-    assertThat(addedOrder, is(equalTo(expectedOrder)));
+    assertThat(addedOrder, is(equalTo(expectedOrder.withId(expectedOrderId))));
 
     // when
     final int status = callRestToDeleteOrderByIdAndReturnStatus(expectedOrderId);
@@ -122,14 +143,6 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     // then
     assertThat(status, is(equalTo(HttpStatus.OK.value())));
     assertThat(numberOfAllOrdersInDbAfterDeletion, is(equalTo(0)));
-  }
-
-  private void assignIdsToOrderInstances(Order pizzaOrder, long pizzaOrderId, Order spriteOrder, long spriteOrderId, Order bazookaOrder,
-      long bazookaOrderId, Order chipsOrder, long chipsOrderId) {
-    pizzaOrder.setId(pizzaOrderId);
-    spriteOrder.setId(spriteOrderId);
-    bazookaOrder.setId(bazookaOrderId);
-    chipsOrder.setId(chipsOrderId);
   }
 
 }

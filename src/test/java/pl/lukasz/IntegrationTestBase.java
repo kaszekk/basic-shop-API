@@ -3,6 +3,7 @@ package pl.lukasz;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +52,14 @@ public abstract class IntegrationTestBase {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
     return Long.parseLong(response);
+  }
+
+  protected int callRestToUpdateOrderAndReturnStatus(long id, Order updatedOrder) throws Exception {
+    return mockMvc
+        .perform(put(ORDER_SERVICE_PATH + "/" + id)
+            .content(json(updatedOrder))
+            .contentType(JSON_CONTENT_TYPE))
+        .andReturn().getResponse().getStatus();
   }
 
   protected int callRestToDeleteOrderByIdAndReturnStatus(long id) throws Exception {

@@ -25,6 +25,7 @@ public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @ApiModelProperty(value = "Order id.", dataType = "Long", position = -1)
+  @With
   private Long id;
 
   @ApiModelProperty(value = "Short order description.", example = "Pizza", dataType = "String")
@@ -53,8 +54,8 @@ public class Order {
 
   private void validateBuyer(Buyer buyer) {
     ArgumentValidator.ensureNotNull(buyer, "buyer");
-    ArgumentValidator.ensureNotNull(buyer.getBuyerName(), "buyer name");
-    ArgumentValidator.ensureNotNull(buyer.getBuyerSurname(), "buyer surname");
+    ArgumentValidator.ensureNotNull(buyer.getName(), "buyer name");
+    ArgumentValidator.ensureNotNull(buyer.getSurname(), "buyer surname");
   }
 
   private void validateOrderDescriptionAndDate(String description, LocalDate date) {
