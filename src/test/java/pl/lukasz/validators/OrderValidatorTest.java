@@ -150,7 +150,25 @@ public class OrderValidatorTest {
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithNullNameBuyer() {
+  public void shouldThrowExceptionForOrderWithNullDescription() {
+    // given
+    Buyer buyer = new Buyer("Adam", "Smith");
+
+    // when
+    Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+      Order.builder()
+          .description(null)
+          .buyer(buyer)
+          .date(LocalDate.of(2020, 7, 20))
+          .build();
+    });
+
+    assertThat(exception.getMessage(), is(equalTo("order description cannot be null")));
+
+  }
+
+  @Test
+  public void shouldThrowExceptionForOrderWithNullNameBuyer() {
     // given
     Buyer nullNameBuyer = new Buyer(null, "Smith");
 
@@ -167,21 +185,17 @@ public class OrderValidatorTest {
   }
 
   @Test
-  public void shouldReturnIllegalArgumentExceptionForOrderWithNullDescription() {
-    // given
-    Buyer buyer = new Buyer("Adam", "Smith");
-
+  public void shouldThrowExceptionForOrderWithNullBuyer() {
     // when
     Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
       Order.builder()
-          .description(null)
-          .buyer(buyer)
+          .description("Pizza")
+          .buyer(null)
           .date(LocalDate.of(2020, 7, 20))
           .build();
     });
 
-    assertThat(exception.getMessage(), is(equalTo("order description cannot be null")));
-
+    assertThat(exception.getMessage(), is(equalTo("buyer cannot be null")));
   }
 
   @Test

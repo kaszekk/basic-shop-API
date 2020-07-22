@@ -17,7 +17,6 @@ import lombok.NonNull;
 @Data
 @Builder(builderClassName = "NullParameterValidatingBuilder", buildMethodName = "build")
 @NoArgsConstructor
-//@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
@@ -42,13 +41,11 @@ public class Order {
     public Order build() {
       return new Order(description, buyer, date);
     }
-
   }
 
   public Order(String description, Buyer buyer, LocalDate date) {
     validateBuyer(buyer);
-    ArgumentValidator.ensureNotNull(description, "order description");
-    ArgumentValidator.ensureNotNull(date, "order date");
+    validateOrderDescriptionAndDate(description, date);
     this.description = description;
     this.buyer = buyer;
     this.date = date;
@@ -58,6 +55,11 @@ public class Order {
     ArgumentValidator.ensureNotNull(buyer, "buyer");
     ArgumentValidator.ensureNotNull(buyer.getBuyerName(), "buyer name");
     ArgumentValidator.ensureNotNull(buyer.getBuyerSurname(), "buyer surname");
+  }
+
+  private void validateOrderDescriptionAndDate(String description, LocalDate date) {
+    ArgumentValidator.ensureNotNull(description, "order description");
+    ArgumentValidator.ensureNotNull(date, "order date");
   }
 
 }

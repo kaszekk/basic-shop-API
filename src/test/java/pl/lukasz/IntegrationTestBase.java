@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.lukasz.model.Order;
 
-public class IntegrationTestBase {
+public abstract class IntegrationTestBase {
 
   protected static final String ORDER_SERVICE_PATH = "/order";
   protected static final MediaType JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON_UTF8;
