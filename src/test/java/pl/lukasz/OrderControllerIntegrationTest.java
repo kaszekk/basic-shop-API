@@ -1,6 +1,8 @@
 package pl.lukasz;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
   @Test
   public void shouldReturnIdWhenEmployeeAddedSuccessfully() throws Exception {
     //Given
-    Buyer buyer = new Buyer("Franek","Kimono");
+    Buyer buyer = new Buyer("Franek", "Kimono");
     LocalDate orderDate = LocalDate.of(2020, 7, 20);
     Order orderRequest = new Order("Pizza", buyer, orderDate);
     long expectedId = 1;
@@ -31,16 +33,13 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     long actual = callRestToAddOrderAndReturnId(orderRequest);
 
     //Then
-    assertEquals(expectedId, actual);
+    assertThat(actual, is(equalTo(expectedId)));
   }
-
-
 
   @Test
   public void shouldAddOrder() throws Exception {
     //Given
-
-    Buyer buyer = new Buyer("Franek","Kimono");
+    Buyer buyer = new Buyer("Franek", "Kimono");
     LocalDate orderDate = LocalDate.of(2020, 6, 20);
 
     Order expectedOrder = new Order("John", buyer, orderDate);
@@ -52,8 +51,8 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     int numberOfAllOrdersInDb = callRestToGetAllOrders().size();
 
     //Then
-    assertEquals(1, numberOfAllOrdersInDb);
-    assertEquals(expectedOrder, addedOrder);
+    assertThat(numberOfAllOrdersInDb, is(equalTo(1)));
+    assertThat(addedOrder, is(equalTo(expectedOrder)));
   }
 
 }

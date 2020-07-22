@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-@Builder
+@Builder(builderClassName = "NullParameterValidatingBuilder", buildMethodName = "build")
 @NoArgsConstructor
 //@RequiredArgsConstructor
 @AllArgsConstructor
@@ -37,9 +37,27 @@ public class Order {
   @ApiModelProperty(value = "Order date.", example = "2020-07-21", dataType = "LocalDate")
   private LocalDate date;
 
+  public static class NullParameterValidatingBuilder {
+
+    public Order build() {
+      return new Order(description, buyer, date);
+    }
+
+  }
+
   public Order(String description, Buyer buyer, LocalDate date) {
+    validateBuyer(buyer);
+    ArgumentValidator.ensureNotNull(description, "order description");
+    ArgumentValidator.ensureNotNull(date, "order date");
     this.description = description;
     this.buyer = buyer;
     this.date = date;
   }
+
+  private void validateBuyer(Buyer buyer) {
+    ArgumentValidator.ensureNotNull(buyer, "buyer");
+    ArgumentValidator.ensureNotNull(buyer.getBuyerName(), "buyer name");
+    ArgumentValidator.ensureNotNull(buyer.getBuyerSurname(), "buyer surname");
+  }
+
 }

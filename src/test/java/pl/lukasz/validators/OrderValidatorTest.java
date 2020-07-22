@@ -1,6 +1,9 @@
 package pl.lukasz.validators;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.lukasz.validators.OrderValidator.BUYER_NAME_EMPTY;
 import static pl.lukasz.validators.OrderValidator.BUYER_SURNAME_EMPTY;
 import static pl.lukasz.validators.OrderValidator.ORDER_DESCRIPTION_EMPTY;
@@ -41,8 +44,8 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(order);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_NAME_EMPTY)));
   }
 
   @Test
@@ -63,8 +66,8 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(order);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_NAME_EMPTY)));
   }
 
   @Test
@@ -85,39 +88,14 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(order);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_NAME_EMPTY, validationResult.get(0));
-  }
-
-  @Test
-  public void shouldReturnValidationErrorForOrderWithEmptySurnameBuyer() {
-    // given
-    Buyer emptySurnameBuyer = Buyer.builder()
-        .name("Adam")
-        .surname(EMPTY)
-        .build();
-
-    Order order = Order.builder()
-        .description("Pizza")
-        .buyer(emptySurnameBuyer)
-        .date(LocalDate.of(2020, 7, 20))
-        .build();
-
-    // when
-    final List<String> validationResult = orderValidator.validate(order);
-
-    // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_SURNAME_EMPTY)));
   }
 
   @Test
   public void shouldReturnValidationErrorForOrderWithWhiteCharactersSurnameBuyer() {
     // given
-    Buyer whiteCharactersSurnameBuyer = Buyer.builder()
-        .name("Adam")
-        .surname(ONLY_WHITE_CHARACTERS)
-        .build();
+    Buyer whiteCharactersSurnameBuyer = new Buyer("Adam", ONLY_WHITE_CHARACTERS);
 
     Order order = Order.builder()
         .description("Pizza")
@@ -129,39 +107,14 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(order);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
-  }
-
-  @Test
-  public void shouldReturnValidationErrorForOrderWithNullSurnameBuyer() {
-    // given
-    Buyer nullSurnameBuyer = Buyer.builder()
-        .name("Adam")
-        .surname(null)
-        .build();
-
-    Order order = Order.builder()
-        .description("Pizza")
-        .buyer(nullSurnameBuyer)
-        .date(LocalDate.of(2020, 7, 20))
-        .build();
-
-    // when
-    final List<String> validationResult = orderValidator.validate(order);
-
-    // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_SURNAME_EMPTY)));
   }
 
   @Test
   public void shouldReturnValidationErrorForOrderWithEmptyDescription() {
     // given
-    Buyer buyer = Buyer.builder()
-        .name("Adam")
-        .surname("Smith")
-        .build();
+    Buyer buyer = new Buyer("Adam", "Smith");
 
     Order emptyDescriptionOrder = Order.builder()
         .description(EMPTY)
@@ -173,17 +126,14 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(emptyDescriptionOrder);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(ORDER_DESCRIPTION_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(ORDER_DESCRIPTION_EMPTY)));
   }
 
   @Test
   public void shouldReturnValidationErrorForOrderWithWhiteCharactersDescription() {
     // given
-    Buyer buyer = Buyer.builder()
-        .name("Adam")
-        .surname("Smith")
-        .build();
+    Buyer buyer = new Buyer("Adam", "Smith");
 
     Order whiteCharactersDescriptionOrder = Order.builder()
         .description(ONLY_WHITE_CHARACTERS)
@@ -195,52 +145,59 @@ public class OrderValidatorTest {
     final List<String> validationResult = orderValidator.validate(whiteCharactersDescriptionOrder);
 
     // then
-    assertEquals(1, validationResult.size());
-    assertEquals(ORDER_DESCRIPTION_EMPTY, validationResult.get(0));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(ORDER_DESCRIPTION_EMPTY)));
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithNullDescription() {
+  public void shouldReturnValidationErrorForOrderWithNullNameBuyer() {
     // given
-    Buyer buyer = Buyer.builder()
-        .name("Adam")
-        .surname("Smith")
-        .build();
-
-    Order nullDescriptionOrder = Order.builder()
-        .description(null)
-        .buyer(buyer)
-        .date(LocalDate.of(2020, 7, 20))
-        .build();
+    Buyer nullNameBuyer = new Buyer(null, "Smith");
 
     // when
-    final List<String> validationResult = orderValidator.validate(nullDescriptionOrder);
+    Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+      Order.builder()
+          .description("Pizza")
+          .buyer(nullNameBuyer)
+          .date(LocalDate.of(2020, 7, 20))
+          .build();
+    });
 
-    // then
-    assertEquals(1, validationResult.size());
-    assertEquals(ORDER_DESCRIPTION_EMPTY, validationResult.get(0));
+    assertThat(exception.getMessage(), is(equalTo("buyer name cannot be null")));
   }
 
   @Test
-  public void shouldReturnValidationErrorForNullDateOrder() {
+  public void shouldReturnIllegalArgumentExceptionForOrderWithNullDescription() {
     // given
-    Buyer nullSurnameBuyer = Buyer.builder()
-        .name("Adam")
-        .surname(null)
-        .build();
-
-    Order order = Order.builder()
-        .description("Pizza")
-        .buyer(nullSurnameBuyer)
-        .date(LocalDate.of(2020, 7, 20))
-        .build();
+    Buyer buyer = new Buyer("Adam", "Smith");
 
     // when
-    final List<String> validationResult = orderValidator.validate(order);
+    Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+      Order.builder()
+          .description(null)
+          .buyer(buyer)
+          .date(LocalDate.of(2020, 7, 20))
+          .build();
+    });
 
-    // then
-    assertEquals(1, validationResult.size());
-    assertEquals(BUYER_SURNAME_EMPTY, validationResult.get(0));
+    assertThat(exception.getMessage(), is(equalTo("order description cannot be null")));
+
   }
 
+  @Test
+  public void shouldReturnValidationErrorForOrderWithNullSurnameBuyer() {
+    // given
+    Buyer nullSurnameBuyer = new Buyer("Adam", null);
+
+    // when
+    Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+      Order order = Order.builder()
+          .description("Pizza")
+          .buyer(nullSurnameBuyer)
+          .date(LocalDate.of(2020, 7, 20))
+          .build();
+    });
+
+    assertThat(exception.getMessage(), is(equalTo("buyer surname cannot be null")));
+  }
 }
