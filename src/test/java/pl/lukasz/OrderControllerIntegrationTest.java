@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -96,6 +97,31 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     assertThat(allOrdersFromDb.get(1), is(equalTo(spriteOrder)));
     assertThat(allOrdersFromDb.get(2), is(equalTo(bazookaOrder)));
     assertThat(allOrdersFromDb.get(3), is(equalTo(chipsOrder)));
+  }
+
+  @Test
+  public void shouldDeleteOrder() throws Exception {
+    // given
+    Buyer expectedBuyer = new Buyer("John", "Bean");
+    LocalDate expectedDate = LocalDate.of(2020, 3, 17);
+    Order expectedOrder = new Order("vegetables", expectedBuyer, expectedDate);
+
+    final long expectedOrderId = callRestToAddOrderAndReturnId(expectedOrder);
+
+    Order addedOrder = callRestToGetOrderById(expectedOrderId);
+    int numberOfAllOrdersInDbBeforeDeletion = callRestToGetAllOrders().size();
+    expectedOrder.setId(1L);
+
+    assertThat(numberOfAllOrdersInDbBeforeDeletion, is(equalTo(1)));
+    assertThat(addedOrder, is(equalTo(expectedOrder)));
+
+    // when
+    final int status = callRestToDeleteOrderByIdAndReturnStatus(expectedOrderId);
+    int numberOfAllOrdersInDbAfterDeletion = callRestToGetAllOrders().size();
+
+    // then
+    assertThat(status, is(equalTo(HttpStatus.OK.value())));
+    assertThat(numberOfAllOrdersInDbAfterDeletion, is(equalTo(0)));
   }
 
   private void assignIdsToOrderInstances(Order pizzaOrder, long pizzaOrderId, Order spriteOrder, long spriteOrderId, Order bazookaOrder,

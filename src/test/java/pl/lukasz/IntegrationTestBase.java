@@ -1,5 +1,6 @@
 package pl.lukasz;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -50,6 +51,12 @@ public abstract class IntegrationTestBase {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
     return Long.parseLong(response);
+  }
+
+  protected int callRestToDeleteOrderByIdAndReturnStatus(long id) throws Exception {
+    return mockMvc
+        .perform(delete(ORDER_SERVICE_PATH + "/" + id))
+        .andReturn().getResponse().getStatus();
   }
 
   private Order jsonToOrder(String jsonOrder) throws Exception {
