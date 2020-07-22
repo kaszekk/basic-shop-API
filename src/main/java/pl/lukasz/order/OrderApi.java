@@ -1,4 +1,4 @@
-package pl.lukasz;
+package pl.lukasz.order;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

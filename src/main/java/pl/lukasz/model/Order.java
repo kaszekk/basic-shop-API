@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
 
   @Id
@@ -37,4 +39,10 @@ public class Order {
   @ApiModelProperty(value = "Order date.", example = "2020-07-21", dataType = "LocalDate")
   private LocalDate date;
 
+  public Order(String description, String buyerName, String buyerSurname, LocalDate date) {
+    this.description = description;
+    this.buyerName = buyerName;
+    this.buyerSurname = buyerSurname;
+    this.date = date;
+  }
 }

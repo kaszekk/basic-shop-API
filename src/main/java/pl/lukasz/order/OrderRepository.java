@@ -1,4 +1,4 @@
-package pl.lukasz;
+package pl.lukasz.order;
 
 import java.util.List;
 import java.util.Optional;
