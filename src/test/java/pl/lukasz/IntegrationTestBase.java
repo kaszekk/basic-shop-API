@@ -7,14 +7,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.lukasz.model.Order;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureMockMvc
 public abstract class IntegrationTestBase {
 
   protected static final String ORDER_SERVICE_PATH = "/order";
@@ -23,6 +36,7 @@ public abstract class IntegrationTestBase {
   @Autowired
   protected MockMvc mockMvc;
 
+  @Qualifier("shopObjectMapper")
   @Autowired
   protected ObjectMapper mapper;
 
@@ -47,17 +61,25 @@ public abstract class IntegrationTestBase {
   protected long callRestToAddOrderAndReturnId(Order orderRequest) throws Exception {
     String response = mockMvc
         .perform(post(ORDER_SERVICE_PATH)
-            .content(json(orderRequest))
+            .content(toJson(orderRequest))
             .contentType(JSON_CONTENT_TYPE))
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
     return Long.parseLong(response);
   }
 
+  protected MockHttpServletResponse callRestToAddOrderAndReturnResponse(Order orderRequest) throws Exception {
+    return mockMvc
+        .perform(post(ORDER_SERVICE_PATH)
+            .content(toJson(orderRequest))
+            .contentType(JSON_CONTENT_TYPE))
+        .andReturn().getResponse();
+  }
+
   protected int callRestToUpdateOrderAndReturnStatus(long id, Order updatedOrder) throws Exception {
     return mockMvc
         .perform(put(ORDER_SERVICE_PATH + "/" + id)
-            .content(json(updatedOrder))
+            .content(toJson(updatedOrder))
             .contentType(JSON_CONTENT_TYPE))
         .andReturn().getResponse().getStatus();
   }
@@ -68,6 +90,11 @@ public abstract class IntegrationTestBase {
         .andReturn().getResponse().getStatus();
   }
 
+  protected List<String> getValidationResultFromResponse(MockHttpServletResponse response) throws Exception {
+    return mapper.readValue(response.getContentAsString(), new TypeReference<List<String>>() {
+    });
+  }
+
   private Order jsonToOrder(String jsonOrder) throws Exception {
     return mapper.readValue(jsonOrder, Order.class);
   }
@@ -76,7 +103,7 @@ public abstract class IntegrationTestBase {
     return mapper.readValue(response, mapper.getTypeFactory().constructCollectionType(List.class, Order.class));
   }
 
-  private String json(Object object) throws Exception {
+  private String toJson(Object object) throws Exception {
     return mapper.writeValueAsString(object);
   }
 }

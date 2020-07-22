@@ -3,24 +3,18 @@ package pl.lukasz;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static pl.lukasz.validators.OrderValidator.BUYER_NAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.BUYER_SURNAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.ORDER_DESCRIPTION_EMPTY;
 
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.mock.web.MockHttpServletResponse;
 import pl.lukasz.model.Buyer;
 import pl.lukasz.model.Order;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class OrderControllerIntegrationTest extends IntegrationTestBase {
 
   @Test
@@ -57,6 +51,44 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
   }
 
   @Test
+  public void shouldReturnBadRequestForValidationErrorInAddOrderMethod() throws Exception {
+    // given
+    Buyer emptyNameBuyer = new Buyer("", "Kimono");
+    LocalDate orderDate = LocalDate.of(2020, 6, 20);
+
+    Order invalidOrder = new Order("Bread", emptyNameBuyer, orderDate);
+
+    // when
+    final MockHttpServletResponse response = callRestToAddOrderAndReturnResponse(invalidOrder);
+    final List<String> validationResult = getValidationResultFromResponse(response);
+
+    // then
+    assertThat(response.getStatus(), is(equalTo(HttpStatus.BAD_REQUEST.value())));
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_NAME_EMPTY)));
+  }
+
+  @Test
+  public void shouldReturnBadRequestForValidationErrorsInAddOrderMethod() throws Exception {
+    // given
+    Buyer emptyNameAndSurnameBuyer = new Buyer("", "  ");
+    LocalDate orderDate = LocalDate.of(2020, 6, 20);
+
+    Order invalidOrder = new Order("      ", emptyNameAndSurnameBuyer, orderDate);
+
+    // when
+    final MockHttpServletResponse response = callRestToAddOrderAndReturnResponse(invalidOrder);
+    final List<String> validationResult = getValidationResultFromResponse(response);
+
+    // then
+    assertThat(response.getStatus(), is(equalTo(HttpStatus.BAD_REQUEST.value())));
+    assertThat(validationResult.size(), is(equalTo(3)));
+    assertThat(validationResult.get(0), is(equalTo(BUYER_NAME_EMPTY)));
+    assertThat(validationResult.get(1), is(equalTo(BUYER_SURNAME_EMPTY)));
+    assertThat(validationResult.get(2), is(equalTo(ORDER_DESCRIPTION_EMPTY)));
+  }
+
+  @Test
   public void shouldUpdateOrder() throws Exception {
     // given
     Buyer buyer = new Buyer("Franek", "Kimono");
@@ -84,6 +116,27 @@ class OrderControllerIntegrationTest extends IntegrationTestBase {
     // then
     assertThat(updatedOrderFromDb.getId(), is(equalTo(originalOrderId)));
     assertThat(updatedOrderFromDb, is(equalTo(updatedOrder.withId(originalOrderId))));
+  }
+
+  @Test
+  public void shouldReturnNotFoundWhenTryingToUpdateNotExistingOrder() throws Exception {
+    // given
+    long notExistingId = 35622352;
+
+    int numberOfAllOrdersInDb = callRestToGetAllOrders().size();
+
+    assertThat(numberOfAllOrdersInDb, is(equalTo(0)));
+
+    Buyer updatedBuyer = new Buyer("Alan", "Pogoda");
+    LocalDate updatedOrderDate = LocalDate.of(2019, 2, 23);
+
+    Order updatedOrder = new Order("Sushi", updatedBuyer, updatedOrderDate);
+
+    // when
+    final int status = callRestToUpdateOrderAndReturnStatus(notExistingId, updatedOrder);
+
+    // then
+    assertThat(status, is(equalTo(HttpStatus.NOT_FOUND.value())));
   }
 
   @Test

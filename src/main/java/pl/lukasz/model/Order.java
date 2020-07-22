@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-@Builder(builderClassName = "NullParameterValidatingBuilder", buildMethodName = "build")
+@Builder(builderClassName = "NullParameterValidatingBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,7 +26,7 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @ApiModelProperty(value = "Order id.", dataType = "Long", position = -1)
   @With
-  private Long id;
+  private long id;
 
   @ApiModelProperty(value = "Short order description.", example = "Pizza", dataType = "String")
   private String description;

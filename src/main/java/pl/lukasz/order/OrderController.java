@@ -30,7 +30,6 @@ public class OrderController implements OrderApi {
       return ResponseEntity.badRequest().body(validationResult);
     }
     return ResponseEntity.ok(orderService.addOrder(order).getId());
-
   }
 
   @Override

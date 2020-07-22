@@ -13,7 +13,7 @@ public class JacksonConfig {
 
   @Primary
   @Bean
-  public ObjectMapper objectMapper() {
+  public ObjectMapper shopObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(Include.NON_NULL);
     mapper.registerModule(new JavaTimeModule());
