@@ -2,9 +2,9 @@ package pl.lukasz.validators;
 
 import java.util.ArrayList;
 import java.util.List;
-import pl.lukasz.model.Buyer;
-import pl.lukasz.model.Order;
+import lombok.Data;
 import org.springframework.stereotype.Component;
+import pl.lukasz.model.Order;
 
 @Component
 public class OrderValidator {
@@ -37,8 +37,8 @@ public class OrderValidator {
 
   public List<String> validate(Order order) {
     List<String> validationResults = new ArrayList<>();
+    validateBuyer(order, validationResults);
     validateOrderDescription(order, validationResults);
-    validateBuyer(order.getBuyer(), validationResults);
     validateOrderDate(order, validationResults);
 
     return validationResults;
@@ -54,15 +54,22 @@ public class OrderValidator {
     validateString(orderDescriptionValidationParams, validationResults);
   }
 
-  private void validateBuyer(Buyer buyer, List<String> validationResults) {
-    if (isNullOrEmpty(buyer.getName())) {
-      validationResults.add(BUYER_NAME_EMPTY);
-    }
-    if (isNullOrEmpty(buyer.getSurname())) {
-      validationResults.add(BUYER_SURNAME_EMPTY);
-    } else {
-      validateLength(buyerSurname, BUYER_SURNAME_MAX_LENGTH, TOO_LONG_ORDER_BUYER_SURNAME_MESSAGE, validationResults);
-    }
+  private void validateBuyer(Order order, List<String> validationResults) {
+    final ValidationParams buyerNameValidationParams = new ValidationParams(
+        order.getBuyer().getName(),
+        BUYER_NAME_MAX_LENGTH,
+        BUYER_NAME_EMPTY,
+        TOO_LONG_ORDER_BUYER_NAME_MESSAGE);
+
+    validateString(buyerNameValidationParams, validationResults);
+
+    final ValidationParams buyerSurnameValidationParams = new ValidationParams(
+        order.getBuyer().getSurname(),
+        BUYER_SURNAME_MAX_LENGTH,
+        BUYER_SURNAME_EMPTY,
+        TOO_LONG_ORDER_BUYER_SURNAME_MESSAGE);
+
+    validateString(buyerSurnameValidationParams, validationResults);
   }
 
   private void validateString(ValidationParams validationParams, List<String> validationResults) {

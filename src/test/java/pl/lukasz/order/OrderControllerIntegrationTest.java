@@ -1,4 +1,4 @@
-package pl.lukasz;
+package pl.lukasz.order;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,7 +15,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import pl.lukasz.model.Buyer;
 import pl.lukasz.model.Order;
 
-class OrderControllerIntegrationTest extends IntegrationTestBase {
+public class OrderControllerIntegrationTest extends IntegrationTestBase {
 
   @Test
   public void shouldReturnIdWhenOrderAddedSuccessfully() throws Exception {

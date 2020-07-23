@@ -1,4 +1,4 @@
-package pl.lukasz;
+package pl.lukasz.order;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

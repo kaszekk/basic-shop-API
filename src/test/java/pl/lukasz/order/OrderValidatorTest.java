@@ -1,4 +1,4 @@
-package pl.lukasz.validators;
+package pl.lukasz.order;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -16,10 +16,11 @@ import static pl.lukasz.validators.OrderValidator.TOO_LONG_ORDER_DESCRIPTION_MES
 
 import java.time.LocalDate;
 import java.util.List;
-import pl.lukasz.model.Buyer;
-import pl.lukasz.model.Order;
 import org.junit.Before;
 import org.junit.Test;
+import pl.lukasz.model.Buyer;
+import pl.lukasz.model.Order;
+import pl.lukasz.validators.OrderValidator;
 
 public class OrderValidatorTest {
 
@@ -35,11 +36,7 @@ public class OrderValidatorTest {
   @Test
   public void shouldReturnValidationErrorForOrderWithEmptyNameBuyer() {
     // given
-    Buyer emptyNameBuyer = Buyer.builder()
-        .name(EMPTY)
-        .surname("Smith")
-        .build();
-
+    Buyer emptyNameBuyer = new Buyer("", "Smith");
     Order order = Order.builder()
         .description("Pizza")
         .buyer(emptyNameBuyer)
@@ -57,10 +54,7 @@ public class OrderValidatorTest {
   @Test
   public void shouldReturnValidationErrorForOrderWithWhiteCharactersNameBuyer() {
     // given
-    Buyer whiteCharactersNameBuyer = Buyer.builder()
-        .name(ONLY_WHITE_CHARACTERS)
-        .surname("Smith")
-        .build();
+    Buyer whiteCharactersNameBuyer = new Buyer(ONLY_WHITE_CHARACTERS, "Smith");
 
     Order order = Order.builder()
         .description("Pizza")
@@ -97,16 +91,13 @@ public class OrderValidatorTest {
   }
 
   @Test
-  public void shouldReturnValidationErrorForOrderWithNullNameBuyer() {
+  public void shouldReturnValidationErrorForOrderWithEmptySurnameBuyer() {
     // given
-    Buyer nullNameBuyer = Buyer.builder()
-        .name(null)
-        .surname("Smith")
-        .build();
+    Buyer emptySurnameBuyer = new Buyer("Adam", "");
 
     Order order = Order.builder()
         .description("Pizza")
-        .buyer(nullNameBuyer)
+        .buyer(emptySurnameBuyer)
         .date(LocalDate.of(2020, 7, 20))
         .build();
 
@@ -210,7 +201,6 @@ public class OrderValidatorTest {
     });
 
     assertThat(exception.getMessage(), is(equalTo("order description cannot be null")));
-
   }
 
   @Test

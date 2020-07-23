@@ -21,12 +21,8 @@ public class OrderService {
     return orderRepository.getOrderById(id);
   }
 
-  public void updateOrder(long id, Order updatedOrder) {
-    Order orderToUpdate = getOrderFromDatabase(id);
-    orderToUpdate.setDescription(updatedOrder.getDescription());
-    orderToUpdate.setBuyer(updatedOrder.getBuyer());
-    orderToUpdate.setDate(updatedOrder.getDate());
-    orderRepository.save(orderToUpdate);
+  public Collection<Order> getAllOrders() {
+    return orderRepository.findAll();
   }
 
   public void updateOrder(long id, Order updatedOrder) {
