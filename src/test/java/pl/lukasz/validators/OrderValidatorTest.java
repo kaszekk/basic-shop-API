@@ -5,8 +5,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.lukasz.validators.OrderValidator.BUYER_NAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.BUYER_NAME_MAX_LENGTH;
 import static pl.lukasz.validators.OrderValidator.BUYER_SURNAME_EMPTY;
+import static pl.lukasz.validators.OrderValidator.BUYER_SURNAME_MAX_LENGTH;
 import static pl.lukasz.validators.OrderValidator.ORDER_DESCRIPTION_EMPTY;
+import static pl.lukasz.validators.OrderValidator.ORDER_DESCRIPTION_MAX_LENGTH;
+import static pl.lukasz.validators.OrderValidator.TOO_LONG_ORDER_BUYER_NAME_MESSAGE;
+import static pl.lukasz.validators.OrderValidator.TOO_LONG_ORDER_BUYER_SURNAME_MESSAGE;
+import static pl.lukasz.validators.OrderValidator.TOO_LONG_ORDER_DESCRIPTION_MESSAGE;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -71,6 +77,26 @@ public class OrderValidatorTest {
   }
 
   @Test
+  public void shouldReturnValidationErrorForTooLongNameBuyer() {
+    // given
+    String tooLongName = "d".repeat(BUYER_NAME_MAX_LENGTH + 1);
+    Buyer tooLongNameBuyer = new Buyer(tooLongName, "Smith");
+
+    Order order = Order.builder()
+        .description("Pizza")
+        .buyer(tooLongNameBuyer)
+        .date(LocalDate.of(2020, 7, 20))
+        .build();
+
+    // when
+    final List<String> validationResult = orderValidator.validate(order);
+
+    // then
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(TOO_LONG_ORDER_BUYER_NAME_MESSAGE)));
+  }
+
+  @Test
   public void shouldReturnValidationErrorForOrderWithNullNameBuyer() {
     // given
     Buyer nullNameBuyer = Buyer.builder()
@@ -109,6 +135,26 @@ public class OrderValidatorTest {
     // then
     assertThat(validationResult.size(), is(equalTo(1)));
     assertThat(validationResult.get(0), is(equalTo(BUYER_SURNAME_EMPTY)));
+  }
+
+  @Test
+  public void shouldReturnValidationErrorForTooLongSurnameBuyer() {
+    // given
+    String tooLongSurname = "s".repeat(BUYER_SURNAME_MAX_LENGTH + 1);
+    Buyer tooLongSurnameBuyer = new Buyer("Frank", tooLongSurname);
+
+    Order order = Order.builder()
+        .description("Pizza")
+        .buyer(tooLongSurnameBuyer)
+        .date(LocalDate.of(2020, 7, 20))
+        .build();
+
+    // when
+    final List<String> validationResult = orderValidator.validate(order);
+
+    // then
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(TOO_LONG_ORDER_BUYER_SURNAME_MESSAGE)));
   }
 
   @Test
@@ -165,6 +211,26 @@ public class OrderValidatorTest {
 
     assertThat(exception.getMessage(), is(equalTo("order description cannot be null")));
 
+  }
+
+  @Test
+  public void shouldReturnValidationErrorForTooLongOrderDescription() {
+    // given
+    String tooLongDescription = "d".repeat(ORDER_DESCRIPTION_MAX_LENGTH + 1);
+    Buyer buyer = new Buyer("Alan", "Smith");
+
+    Order order = Order.builder()
+        .description(tooLongDescription)
+        .buyer(buyer)
+        .date(LocalDate.of(2020, 7, 20))
+        .build();
+
+    // when
+    final List<String> validationResult = orderValidator.validate(order);
+
+    // then
+    assertThat(validationResult.size(), is(equalTo(1)));
+    assertThat(validationResult.get(0), is(equalTo(TOO_LONG_ORDER_DESCRIPTION_MESSAGE)));
   }
 
   @Test

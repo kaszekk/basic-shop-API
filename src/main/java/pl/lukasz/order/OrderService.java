@@ -29,19 +29,26 @@ public class OrderService {
     orderRepository.save(orderToUpdate);
   }
 
-  private Order getOrderFromDatabase(long id) {
-    Optional<Order> orderOptional = orderRepository.getOrderById(id);
-    if (orderOptional.isEmpty()) {
-      throw new IllegalStateException("Order with id: " + id + " does not exist in database");
-    }
-    return orderOptional.get();
+  public void updateOrder(long id, Order updatedOrder) {
+    Order orderToUpdate = getOrderFromDatabase(id);
+    orderToUpdate.setDescription(updatedOrder.getDescription());
+    Buyer buyerToUpdate = updatedOrder.getBuyer();
+    buyerToUpdate.setName(updatedOrder.getBuyer().getName());
+    buyerToUpdate.setSurname(updatedOrder.getBuyer().getSurname());
+    orderToUpdate.setBuyer(buyerToUpdate);
+    orderToUpdate.setDate(updatedOrder.getDate());
+    orderRepository.save(orderToUpdate);
   }
 
   public void deleteOrder(long id) {
     orderRepository.deleteById(id);
   }
 
-  public Collection<Order> getAllOrders() {
-    return orderRepository.findAll();
+  private Order getOrderFromDatabase(long id) {
+    Optional<Order> orderOptional = orderRepository.getOrderById(id);
+    if (orderOptional.isEmpty()) {
+      throw new IllegalStateException("Order with id: " + id + " does not exist in database");
+    }
+    return orderOptional.get();
   }
 }
