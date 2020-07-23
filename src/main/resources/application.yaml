@@ -1,0 +1,13 @@
+server:
+  port: 8088
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  properties:
+    hibernate:
+      jdbc:
+        lob:
+          non_contextual_creation: true
