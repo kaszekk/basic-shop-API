@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import pl.lukasz.helpers.IntegrationTestBase;
 import pl.lukasz.model.Buyer;
 import pl.lukasz.model.Order;
 
