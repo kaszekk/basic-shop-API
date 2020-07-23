@@ -96,5 +96,4 @@ public class OrderValidator {
       validationResults.add(onTooLongMessage);
     }
   }
-
 }

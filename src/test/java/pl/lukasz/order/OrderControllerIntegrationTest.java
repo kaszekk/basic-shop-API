@@ -197,5 +197,4 @@ public class OrderControllerIntegrationTest extends IntegrationTestBase {
     assertThat(status, is(equalTo(HttpStatus.OK.value())));
     assertThat(numberOfAllOrdersInDbAfterDeletion, is(equalTo(0)));
   }
-
 }

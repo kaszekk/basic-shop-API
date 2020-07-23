@@ -53,5 +53,4 @@ public interface OrderApi {
       @ApiResponse(code = 404, message = "Order not found for given id.")})
   @GetMapping(value = "/{id}")
   ResponseEntity<?> getOrderById(@PathVariable long id);
-
 }
