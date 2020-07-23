@@ -14,8 +14,8 @@ public class TestOrderProvider {
   private static final List<String> surnames = List.of("Smith", "Foy", "Larson", "Fredriksen", "Kowalski", "Nowak", "Putin", "Yakoblev");
   private static final List<String> descriptions = List.of("Fuel", "Pizza", "Bike", "Vegetables", "Fruits", "Bread", "Food", "Paint");
 
-  private static final LocalDate startDate = LocalDate.of(2000, 1, 1);
-  private static final LocalDate endDate = LocalDate.of(2020, 12, 31);
+  private static final LocalDate dateRangeStart = LocalDate.of(2000, 1, 1);
+  private static final LocalDate dateRangeEnd = LocalDate.of(2020, 12, 31);
   private static final List<LocalDate> randomDates = getRandomDatesFromDateRange(descriptions.size());
 
   private static final LocalDate randomDate = getRandomDate();
@@ -49,8 +49,8 @@ public class TestOrderProvider {
   }
 
   private static List<LocalDate> getRandomDatesFromDateRange(int datesCount) {
-    long minEpochDay = TestOrderProvider.startDate.toEpochDay();
-    long maxEpochDay = TestOrderProvider.endDate.toEpochDay();
+    long minEpochDay = TestOrderProvider.dateRangeStart.toEpochDay();
+    long maxEpochDay = TestOrderProvider.dateRangeEnd.toEpochDay();
 
     return IntStream.rangeClosed(1, datesCount)
         .mapToLong(n -> getRandomEpochDay(minEpochDay, maxEpochDay))
