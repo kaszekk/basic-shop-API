@@ -21,11 +21,10 @@ public class TestOrderProvider {
 
   public Order getRandomOrder() {
 
-  private static final String randomFirstName = getRandomElementFromList(firstNames);
-  private static final String randomSurname = getRandomElementFromList(surnames);
-  private static final String randomDescription = getRandomElementFromList(descriptions);
-
-  public static Order getRandomOrder() {
+    LocalDate randomDate = getRandomDate();
+    String randomFirstName = getRandomElementFromList(firstNames);
+    String randomSurname = getRandomElementFromList(surnames);
+    String randomDescription = getRandomElementFromList(descriptions);
 
     return Order.builder()
         .buyer(Buyer.builder()
@@ -37,21 +36,21 @@ public class TestOrderProvider {
         .build();
   }
 
-  private static String getRandomElementFromList(List<String> list) {
+  private String getRandomElementFromList(List<String> list) {
     return list.get(getRandomIndex(list.size()));
   }
 
-  private static int getRandomIndex(int size) {
+  private int getRandomIndex(int size) {
     return ThreadLocalRandom.current().nextInt(0, size - 1);
   }
 
-  private static LocalDate getRandomDate() {
+  private LocalDate getRandomDate() {
     return randomDates.get(getRandomIndex(randomDates.size()));
   }
 
-  private static List<LocalDate> getRandomDatesFromDateRange(int datesCount) {
-    long minEpochDay = TestOrderProvider.dateRangeStart.toEpochDay();
-    long maxEpochDay = TestOrderProvider.dateRangeEnd.toEpochDay();
+  private List<LocalDate> getRandomDatesFromDateRange(int datesCount) {
+    long minEpochDay = dateRangeStart.toEpochDay();
+    long maxEpochDay = dateRangeEnd.toEpochDay();
 
     return IntStream.rangeClosed(1, datesCount)
         .mapToLong(n -> getRandomEpochDay(minEpochDay, maxEpochDay))
@@ -59,7 +58,7 @@ public class TestOrderProvider {
         .collect(Collectors.toList());
   }
 
-  private static long getRandomEpochDay(long min, long max) {
+  private long getRandomEpochDay(long min, long max) {
     return ThreadLocalRandom.current().nextLong(min, max);
   }
 }
