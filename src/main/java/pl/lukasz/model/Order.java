@@ -63,5 +63,4 @@ public class Order {
     ArgumentValidator.ensureNotNull(description, "order description");
     ArgumentValidator.ensureNotNull(date, "order date");
   }
-
 }
