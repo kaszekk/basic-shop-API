@@ -10,15 +10,16 @@ import pl.lukasz.model.Order;
 
 public class TestOrderProvider {
 
-  private static final List<String> firstNames = List.of("Adam", "Jake", "John", "Jacob", "Fiona", "Lucy", "Miranda", "Olivier");
-  private static final List<String> surnames = List.of("Smith", "Foy", "Larson", "Fredriksen", "Kowalski", "Nowak", "Putin", "Yakoblev");
-  private static final List<String> descriptions = List.of("Fuel", "Pizza", "Bike", "Vegetables", "Fruits", "Bread", "Food", "Paint");
+  private final List<String> firstNames = List.of("Adam", "Jake", "John", "Jacob", "Fiona", "Lucy", "Miranda", "Olivier");
+  private final List<String> surnames = List.of("Smith", "Foy", "Larson", "Fredriksen", "Kowalski", "Nowak", "Putin", "Yakoblev");
+  private final List<String> descriptions = List.of("Fuel", "Pizza", "Bike", "Vegetables", "Fruits", "Bread", "Food", "Paint");
 
-  private static final LocalDate dateRangeStart = LocalDate.of(2000, 1, 1);
-  private static final LocalDate dateRangeEnd = LocalDate.of(2020, 12, 31);
-  private static final List<LocalDate> randomDates = getRandomDatesFromDateRange(descriptions.size());
+  private final LocalDate dateRangeStart = LocalDate.of(2000, 1, 1);
+  private final LocalDate dateRangeEnd = LocalDate.of(2020, 12, 31);
+  private int randomDatesCount = 100;
+  private final List<LocalDate> randomDates = getRandomDatesFromDateRange(randomDatesCount);
 
-  private static final LocalDate randomDate = getRandomDate();
+  public Order getRandomOrder() {
 
   private static final String randomFirstName = getRandomElementFromList(firstNames);
   private static final String randomSurname = getRandomElementFromList(surnames);

@@ -35,8 +35,9 @@ class OrderServiceTest {
 
   @BeforeEach
   void setUp() {
-    order1 = TestOrderProvider.getRandomOrder();
-    order2 = TestOrderProvider.getRandomOrder();
+    TestOrderProvider testOrderProvider = new TestOrderProvider();
+    order1 = testOrderProvider.getRandomOrder();
+    order2 = testOrderProvider.getRandomOrder();
   }
 
   @Test
